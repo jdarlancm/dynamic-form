@@ -1,3 +1,4 @@
+import { ActionReturn } from "@/components/EntityBrowser/EntityBrowser.types";
 import {
   FormAction,
   FormField,
@@ -21,16 +22,28 @@ export class ParticipantForm implements EntityForm<Participant> {
     this.object = participant;
   }
 
-  onCreate(object: Participant): void {
+  onCreate(object: Participant): ActionReturn {
     console.log(object);
+    return {
+      success: true,
+      message: "Participante criado com sucesso!",
+    };
   }
 
-  onUpdate(object: Participant): void {
+  onUpdate(object: Participant): ActionReturn {
     console.log(object);
+    return {
+      success: true,
+      message: "Participante atualizado com sucesso!",
+    };
   }
 
-  onDelete(object: Participant): void {
+  onDelete(object: Participant): ActionReturn {
     console.log(object);
+    return {
+      success: true,
+      message: "Participante apagado com sucesso!",
+    };
   }
 
   createFormSchema(action: FormAction): FormField[] {

@@ -3,7 +3,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 import { EntityForm } from "../Form";
 import { formatValue, getAlignmentClass } from "./entityBrowser.util";
-import { ActionsItem } from "./EntityBrowser";
+import { ActionsItem } from "./EntityBrowser.types";
 
 interface ListTableProps<T> {
   items: T[];

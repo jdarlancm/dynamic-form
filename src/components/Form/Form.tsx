@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ZodSchema, ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ type FormProps<T> = {
   action: FormAction;
   onSubmit: (data: T) => void;
   onCancel: () => void;
+  submitError: string | null;
 };
 
 const Form = <T,>({
@@ -23,6 +24,7 @@ const Form = <T,>({
   action,
   onSubmit,
   onCancel,
+  submitError,
 }: FormProps<T>) => {
   const zodSchema = createZodSchema(schema);
   type FormValues = z.infer<typeof zodSchema>;
@@ -87,6 +89,12 @@ const Form = <T,>({
         onSubmit={handleSubmit(onSubmit as SubmitHandler<FormValues>)}
         className="space-y-6"
       >
+        {submitError && (
+          <div className="mb-4 p-2 bg-red-500 text-white rounded">
+            {submitError}
+          </div>
+        )}
+
         <div className={`grid grid-cols-1 ${getGridColsClass(columns)} gap-6`}>
           {schema.map(renderField)}
         </div>

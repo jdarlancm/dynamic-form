@@ -1,3 +1,4 @@
+import { ActionReturn } from "@/components/EntityBrowser/EntityBrowser.types";
 import {
   FormAction,
   FormField,
@@ -25,16 +26,28 @@ class EventForm implements EntityForm<Event> {
     this.object = event;
   }
 
-  onCreate(object: Event): void {
+  onCreate(object: Event): ActionReturn {
     console.log("Create: ", object);
+    return {
+      success: true,
+      message: "Evento criado com sucesso!",
+    };
   }
 
-  onUpdate(object: Event): void {
+  onUpdate(object: Event): ActionReturn {
     console.log("Update:", object);
+    return {
+      success: false,
+      message: "Evento atualizado com sucesso!",
+    };
   }
 
-  onDelete(object: Event): void {
+  onDelete(object: Event): ActionReturn {
     console.log("Delete:", object);
+    return {
+      success: true,
+      message: "Evento apagado com sucesso!",
+    };
   }
 
   createFormSchema(action: FormAction): FormField[] {

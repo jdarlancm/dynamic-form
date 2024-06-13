@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 
-import MainActions, { MainAction } from "./MainAction";
+import MainActions from "./MainAction";
 import Form, { EntityForm, FormAction } from "../Form";
 import Modal from "./Modal";
-import ListTable from "./ListTable";
-import ListCard from "./ListCard";
-
-export type ActionsItem<T> = {
-  view: (item: T) => void;
-  edit: (item: T) => void;
-  delete: (item: T) => void;
-  [key: string]: ((item: T) => void) | undefined;
-};
+import {
+  ActionReturn,
+  ActionsItem,
+  MainAction,
+  PaginatedData,
+} from "./EntityBrowser.types";
+import List from "./List";
 
 interface EntityBrowserProps<T> {
   title: string;
-  mainActions: MainAction[];
-  fetchEntities: () => Promise<T[]>;
+  mainActions?: MainAction[];
+  fetchEntities: (page: number, pageSize: number) => Promise<PaginatedData<T>>;
   entityForm: EntityForm<T>;
+  pageSize?: number;
 }
 
 const EntityBrowser = <T,>({
   title,
-  mainActions,
+  mainActions = [],
   fetchEntities,
   entityForm,
+  pageSize = 10,
 }: EntityBrowserProps<T>) => {
   const [items, setItems] = useState<T[]>([]);
   const [selectedItem, setSelectedItem] = useState<EntityForm<T> | null>(
@@ -33,10 +33,17 @@ const EntityBrowser = <T,>({
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [formAction, setFormAction] = useState<FormAction>(FormAction.VIEW);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
-    fetchEntities().then(setItems);
-  }, [fetchEntities]);
+    fetchEntities(currentPage, pageSize).then((data) => {
+      setItems(data.paginatedData);
+      setTotalPages(data.totalPages);
+    });
+  }, [fetchEntities, currentPage, pageSize]);
 
   const handleActionView = (item: T) => {
     entityForm.object = item;
@@ -67,15 +74,36 @@ const EntityBrowser = <T,>({
   };
 
   const handleSubmit = (obj: T) => {
+    let result: ActionReturn = {
+      success: false,
+      message: "",
+    };
+
     if (formAction === FormAction.CREATE) {
-      entityForm.onCreate(obj);
-      fetchEntities().then(setItems);
-      closeModal();
+      result = entityForm.onCreate(obj);
     } else if (formAction == FormAction.UPDATE) {
-      entityForm.onUpdate(obj);
-      fetchEntities().then(setItems);
-      closeModal();
+      result = entityForm.onUpdate(obj);
+    } else if (formAction == FormAction.DELETE) {
+      result = entityForm.onDelete(obj);
     }
+
+    if (result.success) {
+      fetchEntities(currentPage, pageSize).then((data) => {
+        setItems(data.paginatedData);
+        setTotalPages(data.totalPages);
+      });
+      displaySuccessMessage(result.message);
+      closeModal();
+    } else {
+      setSubmitError(result.message);
+    }
+  };
+
+  const displaySuccessMessage = (message: string) => {
+    setSubmitSuccess(message);
+    setTimeout(() => {
+      setSubmitSuccess(null);
+    }, 5000);
   };
 
   const actionsItem: ActionsItem<T> = {
@@ -95,6 +123,13 @@ const EntityBrowser = <T,>({
     setFormAction(FormAction.VIEW);
     setIsModalOpen(false);
     setSelectedItem(null);
+    setSubmitError(null);
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -106,6 +141,12 @@ const EntityBrowser = <T,>({
 
         <MainActions actions={[createAction, ...mainActions]} />
       </div>
+
+      {submitSuccess && (
+        <div className="mb-4 p-2 bg-green-300 text-green-800 rounded">
+          {submitSuccess}
+        </div>
+      )}
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Search/Filter</h2>
@@ -121,23 +162,14 @@ const EntityBrowser = <T,>({
         </div>
       </div>
 
-      <div>
-        <div className="hidden md:block overflow-x-auto">
-          <ListTable
-            entityForm={entityForm}
-            items={items}
-            actions={actionsItem}
-          />
-        </div>
-
-        <div className="md:hidden">
-          <ListCard
-            entityForm={entityForm}
-            items={items}
-            actions={actionsItem}
-          />
-        </div>
-      </div>
+      <List
+        entityForm={entityForm}
+        items={items}
+        actions={actionsItem}
+        goToPage={goToPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
 
       {isModalOpen && selectedItem && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -147,6 +179,7 @@ const EntityBrowser = <T,>({
             action={formAction}
             onSubmit={handleSubmit}
             onCancel={closeModal}
+            submitError={submitError}
           />
         </Modal>
       )}

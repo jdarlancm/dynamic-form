@@ -1,18 +1,11 @@
 import React from "react";
-import { IconType } from "react-icons";
 
 import HiddenActionsPopup from "./HiddenActionsPopup";
+import { MainAction } from "./EntityBrowser.types";
 
 interface MainActionsProps {
   actions: MainAction[];
 }
-
-export type MainAction = {
-  icon: IconType;
-  label: string;
-  onClick: () => void;
-  className: string;
-};
 
 const MainActions: React.FC<MainActionsProps> = ({ actions }) => {
   const mainActions = actions.slice(0, 2);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
-import { MainAction } from "./MainAction";
+import { MainAction } from "./EntityBrowser.types";
 
 interface HiddenActionsPopupProps {
   actions: MainAction[];

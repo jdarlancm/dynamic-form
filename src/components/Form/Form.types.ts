@@ -1,4 +1,5 @@
 import { ZodType } from "zod";
+import { ActionReturn } from "../EntityBrowser/EntityBrowser.types";
 
 export enum FormAction {
   CREATE = "CREATE",
@@ -43,9 +44,9 @@ export interface EntityForm<T> {
   object: T;
   newObject: T;
 
-  onCreate(object: T): void;
-  onUpdate(object: T): void;
-  onDelete(object: T): void;
+  onCreate(object: T): ActionReturn;
+  onUpdate(object: T): ActionReturn;
+  onDelete(object: T): ActionReturn;
   createFormSchema(action: FormAction): FormField[];
   baseSchema: FormField[];
 }

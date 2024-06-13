@@ -2,11 +2,15 @@
 import React from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import EntityBrowser from "@/components/EntityBrowser/EntityBrowser";
-import { MainAction } from "@/components/EntityBrowser/MainAction";
 import { Event } from "@/entities/Event";
 import EventForm from "@/entitiesForm/EventForm";
 import { Participant } from "@/entities/Participant";
 import { ParticipantForm } from "@/entitiesForm/ParticipantForm";
+import {
+  MainAction,
+  PaginatedData,
+} from "@/components/EntityBrowser/EntityBrowser.types";
+import { mockEvents } from "./mockevents";
 
 const mainActions: MainAction[] = [
   {
@@ -29,46 +33,24 @@ const mainActions: MainAction[] = [
   },
 ];
 
-const fetchMockEvents = async (): Promise<Event[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          title: "Event 1",
-          description: "Description 1",
-          eventDate: new Date("2024-06-01"),
-          registrationDeadline: new Date("2024-05-25"),
-          location: "Location 1",
-          price: 100,
-          simnao: "simplorio",
-        },
-        {
-          id: 2,
-          title: "Event 2",
-          description: "Description 2",
-          eventDate: new Date("2024-07-01"),
-          registrationDeadline: new Date("2024-06-25"),
-          location: "Location 2",
-          price: 150,
-          simnao: "nao",
-        },
-        {
-          id: 3,
-          title: "Event 3",
-          description: "Description 3",
-          eventDate: new Date("2024-08-01"),
-          registrationDeadline: new Date("2024-07-25"),
-          location: "Location 3",
-          price: 200,
-          simnao: "sim",
-        },
-      ]);
-    }, 1000);
-  });
+const fetchEvents = async (
+  page: number,
+  pageSize: number = 10
+): Promise<PaginatedData<Event>> => {
+  const totalPages = Math.ceil(mockEvents.length / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedData = mockEvents.slice(startIndex, endIndex);
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  return { paginatedData, totalPages };
 };
 
-const fetchMockParticpant = async (): Promise<Participant[]> => {
+const fetchMockParticpant = async (
+  page: number,
+  pageSize: number
+): Promise<Participant[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([
@@ -103,11 +85,11 @@ const Home = () => {
     <div>
       <EntityBrowser<Event>
         title="Cadastro de Testes"
-        mainActions={mainActions}
-        fetchEntities={fetchMockEvents}
+        fetchEntities={fetchEvents}
         entityForm={new EventForm({} as Event)}
       />
 
+      {/*
       <br />
       <EntityBrowser<Participant>
         title="Cadastro de Testes"
@@ -115,27 +97,6 @@ const Home = () => {
         fetchEntities={fetchMockParticpant}
         entityForm={new ParticipantForm({} as Participant)}
       />
-      {/*
-      <div className="bg-gray-200 dark:bg-gray-800 w-11/12 m-auto mt-4 text-gray-700 dark:text-gray-200 rounded-md p-2">
-        <form className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-1">
-            <div className="p-2 grid col-span-1 border">1</div>
-            <div className="p-2 grid col-span-1 md:col-span-2 lg:col-span-3 border">
-              2
-            </div>
-            <div className="p-2 grid col-span-1 border">3</div>
-            <div className="p-2 grid col-span-1 border">4</div>
-            <div className="p-2 grid col-span-1 border">5</div>
-            <div className="p-2 grid col-span-1 border">6</div>
-            <div className="p-2 grid col-span-1 border">7</div>
-            <div className="p-2 grid col-span-1 border">8</div>
-            <div className="p-2 grid col-span-1 border">9</div>
-            <div className="p-2 grid col-span-1 border">10</div>
-            <div className="p-2 grid col-span-1 border">11</div>
-            <div className="p-2 grid col-span-1 border">12</div>
-          </div>
-        </form>
-      </div>
       */}
     </div>
   );

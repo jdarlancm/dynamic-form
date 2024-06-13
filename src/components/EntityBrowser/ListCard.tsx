@@ -4,7 +4,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 
 import { EntityForm, FormField } from "../Form";
 import { formatValue } from "./entityBrowser.util";
-import { ActionsItem } from "./EntityBrowser";
+import { ActionsItem } from "./EntityBrowser.types";
 
 interface ListCardProps<T> {
   items: T[];
