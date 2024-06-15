@@ -2,20 +2,27 @@ import React, { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 
 import MainActions from "./MainAction";
-import Form, { EntityForm, FormAction } from "../Form";
+import Form, { EntityForm, FormAction, FormField } from "../Form";
 import Modal from "./Modal";
 import {
   ActionReturn,
   ActionsItem,
+  Filter,
   MainAction,
   PaginatedData,
 } from "./EntityBrowser.types";
 import List from "./List";
+import ListFilter from "./ListFilter";
+import { colors } from "./colors";
 
 interface EntityBrowserProps<T> {
   title: string;
   mainActions?: MainAction[];
-  fetchEntities: (page: number, pageSize: number) => Promise<PaginatedData<T>>;
+  fetchEntities: (
+    page: number,
+    pageSize: number,
+    filters?: Filter[]
+  ) => Promise<PaginatedData<T>>;
   entityForm: EntityForm<T>;
   pageSize?: number;
 }
@@ -28,6 +35,7 @@ const EntityBrowser = <T,>({
   pageSize = 10,
 }: EntityBrowserProps<T>) => {
   const [items, setItems] = useState<T[]>([]);
+
   const [selectedItem, setSelectedItem] = useState<EntityForm<T> | null>(
     entityForm
   );
@@ -35,15 +43,18 @@ const EntityBrowser = <T,>({
   const [formAction, setFormAction] = useState<FormAction>(FormAction.VIEW);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const [filters, setFilters] = useState<Filter[]>([]);
+
   useEffect(() => {
-    fetchEntities(currentPage, pageSize).then((data) => {
+    fetchEntities(currentPage, pageSize, filters).then((data) => {
       setItems(data.paginatedData);
       setTotalPages(data.totalPages);
     });
-  }, [fetchEntities, currentPage, pageSize]);
+  }, [fetchEntities, currentPage, pageSize, filters]);
 
   const handleActionView = (item: T) => {
     entityForm.object = item;
@@ -99,6 +110,11 @@ const EntityBrowser = <T,>({
     }
   };
 
+  const handleChangeFilters = (filters: Filter[]) => {
+    setCurrentPage(1);
+    setFilters(filters);
+  };
+
   const displaySuccessMessage = (message: string) => {
     setSubmitSuccess(message);
     setTimeout(() => {
@@ -116,7 +132,7 @@ const EntityBrowser = <T,>({
     icon: FaPlusCircle,
     label: "Novo",
     onClick: handleActionCreate,
-    className: "bg-green-500 hover:bg-green-600 text-white",
+    className: `${colors.actions.create.background} hover:${colors.actions.create.hover} ${colors.actions.create.text}`,
   };
 
   const closeModal = () => {
@@ -132,10 +148,16 @@ const EntityBrowser = <T,>({
     }
   };
 
+  const filterableFields = entityForm.baseSchema.filter(
+    (field: FormField) => field.filtrableInList
+  );
+
   return (
-    <div className="container w-full mx-auto mt-4 rounded-md p-4 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+    <div
+      className={`container w-full mx-auto mt-4 rounded-md p-4 ${colors.background.light} dark:${colors.background.dark} ${colors.text.light} dark:${colors.text.dark}`}
+    >
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold text-primary-dark dark:text-primary-light">
+        <h1 className={`text-2xl font-semibold ${colors.text.primary}`}>
           {title}
         </h1>
 
@@ -143,24 +165,20 @@ const EntityBrowser = <T,>({
       </div>
 
       {submitSuccess && (
-        <div className="mb-4 p-2 bg-green-300 text-green-800 rounded">
+        <div
+          className={`mb-4 p-2 ${colors.messages.success.background} ${colors.messages.success.text} rounded`}
+        >
           {submitSuccess}
         </div>
       )}
 
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Search/Filter</h2>
-        <div className="flex space-x-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="p-2 border rounded w-full"
-          />
-          <button className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded">
-            Search
-          </button>
-        </div>
-      </div>
+      {filterableFields && filterableFields.length > 0 && (
+        <ListFilter
+          filters={filters}
+          setFilters={handleChangeFilters}
+          filterableFields={filterableFields}
+        />
+      )}
 
       <List
         entityForm={entityForm}

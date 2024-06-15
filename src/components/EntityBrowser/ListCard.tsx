@@ -5,6 +5,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { EntityForm, FormField } from "../Form";
 import { formatValue } from "./entityBrowser.util";
 import { ActionsItem } from "./EntityBrowser.types";
+import { colors } from "./colors";
 
 interface ListCardProps<T> {
   items: T[];
@@ -36,13 +37,14 @@ const ListCard = <T,>({ items, entityForm, actions }: ListCardProps<T>) => {
     );
   };
 
+  const cardColor = `${colors.list.border.light} ${colors.text.light} ${colors.list.oddRow.light} hover:${colors.list.hover.light} dark:${colors.list.border.dark} dark:${colors.text.dark} dark:${colors.list.oddRow.dark} dark:hover:${colors.list.hover.dark}`;
+
   return (
     <>
       {items.map((item, index) => (
         <div
           key={index}
-          className={`p-4 border-b text-sm md:text-md border-gray-800 dark:border-gray-200 
-            text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800`}
+          className={`p-4 border-b text-sm md:text-md ${cardColor}`}
         >
           {fieldVisible
             .slice(0, qtdFieldsShowed)
@@ -56,20 +58,20 @@ const ListCard = <T,>({ items, entityForm, actions }: ListCardProps<T>) => {
           <div className="flex space-x-3">
             <button
               onClick={() => toggleExpandCard(index)}
-              className="text-blue-400"
+              className={`${colors.text.primary}`}
             >
               {expandedCardIndex === index ? "Mostrar menos" : "Mostrar mais"}
             </button>
             <FaMagnifyingGlass
-              className="text-gray-400 cursor-pointer"
+              className={`${colors.actions.view.text} cursor-pointer"`}
               onClick={() => actions.view(item)}
             />
             <FaRegEdit
-              className="text-yellow-400 cursor-pointer"
+              className={`${colors.actions.update.text} cursor-pointer"`}
               onClick={() => actions.edit(item)}
             />
             <FaRegTrashAlt
-              className="text-red-400 cursor-pointer"
+              className={`${colors.actions.delete.text} cursor-pointer`}
               onClick={() => actions.delete(item)}
             />
           </div>

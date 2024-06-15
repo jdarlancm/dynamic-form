@@ -23,3 +23,20 @@ export type ActionReturn = {
   success: boolean;
   message: string;
 };
+
+export enum FilterCondition {
+  Equals = "igual à",
+  Contains = "contém",
+  StartsWith = "começa com",
+  EndsWith = "termina com",
+  LessThan = "menor que",
+  GreaterThan = "maior que",
+  LessOrEqual = "menor ou igual à",
+  GreaterOrEqual = "maior ou igual à",
+}
+
+export type Filter = {
+  field: string;
+  operator: FilterCondition | "";
+  value: string;
+};

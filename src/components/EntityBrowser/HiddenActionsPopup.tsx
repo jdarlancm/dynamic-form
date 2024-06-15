@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import { MainAction } from "./EntityBrowser.types";
+import { colors } from "./colors";
 
 interface HiddenActionsPopupProps {
   actions: MainAction[];
@@ -12,6 +13,13 @@ const HiddenActionsPopup = ({ actions }: HiddenActionsPopupProps) => {
     setIsOpen(!isOpen);
   };
 
+  const toggleButonColor = `${colors.text.light} ${colors.background.light} hover:${colors.background.hover.light}
+    dark:${colors.text.dark} dark:${colors.background.dark} dark:hover:${colors.background.hover.dark}`;
+
+  const popupColor = `${colors.text.dark} ${colors.background.dark} dark:${colors.text.light} dark:${colors.background.light}`;
+
+  const itemPopupColor = `hover:${colors.background.hover.dark} dark:hover:${colors.background.hover.light}`;
+
   return (
     <div className="relative inline-block text-left">
       <div>
@@ -19,7 +27,7 @@ const HiddenActionsPopup = ({ actions }: HiddenActionsPopupProps) => {
           type="button"
           className={`${
             actions.length <= 2 ? "sm:hidden" : ""
-          } px-2 py-2 text-sm text-gray-800 dark:text-gray-200 bg-gray-200 dark:bg-gray-800 rounded-md hover:bg-gray-400 `}
+          } px-2 py-2 text-sm rounded-md ${toggleButonColor}`}
           id="options-menu"
           aria-expanded="true"
           aria-haspopup="true"
@@ -30,7 +38,9 @@ const HiddenActionsPopup = ({ actions }: HiddenActionsPopupProps) => {
       </div>
 
       {isOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-700 dark:bg-gray-200 ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div
+          className={`origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg ${popupColor} ring-1 ring-black ring-opacity-5 focus:outline-none `}
+        >
           <div
             className="py-1"
             role="menu"
@@ -42,7 +52,7 @@ const HiddenActionsPopup = ({ actions }: HiddenActionsPopupProps) => {
                 key={index}
                 className={`${
                   index <= 1 ? "sm:hidden" : ""
-                } flex items-center px-4 py-2 text-sm text-gray-200 dark:text-gray-800 hover:bg-gray-600 dark:hover:bg-gray-300 w-full text-left`}
+                } flex items-center px-4 py-2 text-sm ${itemPopupColor} w-full text-left`}
                 onClick={action.onClick}
                 role="menuitem"
               >

@@ -79,6 +79,7 @@ class EventForm implements EntityForm<Event> {
     required: true,
     validator: ZOD_VALIDATOR.lettersRequired,
     widthInList: "30%",
+    filtrableInList: true,
   };
 
   descriptionSchema: FormField = {
@@ -89,6 +90,7 @@ class EventForm implements EntityForm<Event> {
     validator: ZOD_VALIDATOR.lettersRequired,
     customClassName: "md:col-span-2 lg:col-span-3",
     visibleInList: false,
+    filtrableInList: true,
   };
 
   eventDateSchema: FormField = {
@@ -97,6 +99,7 @@ class EventForm implements EntityForm<Event> {
     type: FieldTypes.date,
     required: true,
     validator: ZOD_VALIDATOR.dateNotPastRequired,
+    filtrableInList: true,
   };
 
   registrationDeadlineSchema: FormField = {

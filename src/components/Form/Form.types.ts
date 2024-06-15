@@ -35,9 +35,10 @@ export interface FormField {
   options?: Option[];
   validator: ZodType;
   customClassName?: string;
+  primaryKey?: boolean;
   visibleInList?: boolean;
   widthInList?: string;
-  primaryKey?: boolean;
+  filtrableInList?: boolean;
 }
 
 export interface EntityForm<T> {

@@ -1,4 +1,5 @@
 import React from "react";
+import { colors } from "./colors";
 
 interface ModalProps {
   isOpen: boolean;
@@ -15,7 +16,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         className="fixed inset-0 bg-black opacity-50"
         onClick={onClose}
       ></div>
-      <div className="relative bg-white dark:bg-gray-800 rounded shadow-lg z-10 w-[95vw] max-h-[95vh] overflow-y-auto">
+      <div
+        className={`relative ${colors.background.light} dark:${colors.background.dark} rounded shadow-lg z-10 w-[95vw] max-h-[95vh] overflow-y-auto"`}
+      >
         <button className="absolute top-0 right-0 p-2" onClick={onClose}>
           X
         </button>

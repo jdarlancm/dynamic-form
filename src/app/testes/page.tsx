@@ -7,6 +7,8 @@ import EventForm from "@/entitiesForm/EventForm";
 import { Participant } from "@/entities/Participant";
 import { ParticipantForm } from "@/entitiesForm/ParticipantForm";
 import {
+  Filter,
+  FilterCondition,
   MainAction,
   PaginatedData,
 } from "@/components/EntityBrowser/EntityBrowser.types";
@@ -33,14 +35,58 @@ const mainActions: MainAction[] = [
   },
 ];
 
+const createFilterCondition = (filter: Filter) => {
+  const { field, operator, value } = filter;
+
+  switch (FilterCondition[operator]) {
+    case FilterCondition.Equals:
+      return (item: any) => item[field] == value;
+
+    case FilterCondition.Contains:
+      return (item: any) => item[field]?.includes(value);
+
+    case FilterCondition.StartsWith:
+      console.log("2");
+      return (item: any) => item[field]?.startsWith(value);
+
+    case FilterCondition.EndsWith:
+      return (item: any) => item[field]?.endsWith(value);
+
+    case FilterCondition.LessThan:
+      return (item: any) => new Date(item[field]) < new Date(value);
+
+    case FilterCondition.GreaterThan:
+      return (item: any) => new Date(item[field]) > new Date(value);
+
+    case FilterCondition.LessOrEqual:
+      return (item: any) => new Date(item[field]) <= new Date(value);
+
+    case FilterCondition.GreaterOrEqual:
+      return (item: any) => new Date(item[field]) >= new Date(value);
+
+    default:
+      return () => true;
+  }
+};
+
 const fetchEvents = async (
   page: number,
-  pageSize: number = 10
+  pageSize: number = 10,
+  filters?: Filter[]
 ): Promise<PaginatedData<Event>> => {
-  const totalPages = Math.ceil(mockEvents.length / pageSize);
+  let mockFiltered = mockEvents;
+
+  if (filters && filters.length > 0) {
+    console.log(filters);
+    mockFiltered = mockEvents.filter((event) =>
+      filters.every((filter) => createFilterCondition(filter)(event))
+    );
+  }
+
+  const totalPages = Math.ceil(mockFiltered.length / pageSize);
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const paginatedData = mockEvents.slice(startIndex, endIndex);
+  const paginatedData = mockFiltered.slice(startIndex, endIndex);
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -87,6 +133,7 @@ const Home = () => {
         title="Cadastro de Testes"
         fetchEntities={fetchEvents}
         entityForm={new EventForm({} as Event)}
+        mainActions={mainActions}
       />
 
       {/*
