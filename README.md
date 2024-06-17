@@ -153,11 +153,28 @@ const eventForm = new EventForm({...})
 | mainActions?  | MainAction[]  | | Ações que não envolva uma entidade especifica (item da listagem) e que não seja o Create. |
 
 
+# Inputs de formulário
+Para que o componente seja dinâmico há um mapeamento dos tipos de campos. Os tipos que atualmente estão mapeados para serem usados corretamente no formulário são:
+- text
+- textarea
+- date
+- email
+- currency
+- number
+- int
+- select
+
+Esses tipos podem ser verificados em [FieldTypes](/src/components/Form/Form.types.ts) e o vinculo com os seus respectivos componentes em [FiledRegistry](/src/components/Form/FieldRegisty.ts)
+Caso precise 
+
 # Exemplos
 
 Neste projeto há exemplos práticos de como utilizar os componentes usando como exemplo o [Event](/src/app/event/page.tsx) e [Participant](/src/app/participant/page.tsx).
 
-# Imagens do componente
+# Screenshots
 
-## Tela prinicipal em pequenos dispositivos 
-![](/docs/images/EntityBrowser-visualizacao-dark.png)
+## Tela prinicipal em visualização normal
+![](/docs/images/entitybrowser-normalview-dark.png)
+
+## Tela prinicipal em visualização normal
+![](/docs/images/EntityBrowser-small-dark.png)
