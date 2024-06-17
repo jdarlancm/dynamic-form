@@ -178,3 +178,8 @@ Neste projeto há exemplos práticos de como utilizar os componentes usando como
 
 ## Tela prinicipal em visualização normal
 ![](/docs/images/EntityBrowser-small-dark.png)
+
+
+# Próximas Features
+[] Inputs autocomplete para grande volume de dados (fetch)
+[] 
