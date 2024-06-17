@@ -6,5 +6,5 @@ export interface Event {
   registrationDeadline: Date | null;
   location: string;
   price: number;
-  simnao: string;
+  typeEvent: string;
 }

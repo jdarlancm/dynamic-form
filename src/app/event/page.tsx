@@ -1,46 +1,69 @@
 "use client";
 import React from "react";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { TbReportAnalytics } from "react-icons/tb";
 
-import Form from "@/components/Form";
-import { FormAction } from "@/components/Form/Form.types";
-import { Event } from "@/entities/Event";
+import {
+  Filter,
+  FilterCondition,
+  MainAction,
+  PaginatedData,
+} from "@/components/EntityBrowser/EntityBrowser.types";
+import EntityBrowser from "@/components/EntityBrowser";
+
 import EventForm from "@/entitiesForm/EventForm";
-import { SubmitHandler } from "react-hook-form";
+import { Event } from "@/entities/Event";
+
+import { mockEvents } from "./mockevents";
+import { filterConditionConverter } from "@/utils/FilterConditionConverter";
 
 const Home = () => {
-  const onSubmit: SubmitHandler<any> = (data: Event) => {
-    console.log("Formulário enviado:", data);
+  const mainActions: MainAction[] = [
+    {
+      icon: IoIosNotificationsOutline,
+      label: "Notificar",
+      onClick: () => console.log("Notificar"),
+      className: "bg-gray-500 hover:bg-gray-600 text-white",
+    },
+    {
+      icon: TbReportAnalytics,
+      label: "Relatório",
+      onClick: () => console.log("Relatório"),
+      className: "bg-gray-500 hover:bg-gray-600 text-white",
+    },
+  ];
+
+  const fetchEvents = async (
+    page: number,
+    pageSize: number = 10,
+    filters?: Filter[]
+  ): Promise<PaginatedData<Event>> => {
+    let mockFiltered = mockEvents;
+
+    if (filters && filters.length > 0) {
+      console.log(filters);
+      mockFiltered = mockEvents.filter((event) =>
+        filters.every((filter) => filterConditionConverter(filter)(event))
+      );
+    }
+
+    const totalPages = Math.ceil(mockFiltered.length / pageSize);
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedData = mockFiltered.slice(startIndex, endIndex);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    return { paginatedData, totalPages };
   };
-
-  const onCancel = () => {
-    console.log("Formulário cancelado!");
-  };
-
-  const event: Event = {
-    id: 1,
-    title: "teste 1",
-    description: "teste 2",
-    eventDate: new Date("2024-06-03"),
-    registrationDeadline: new Date("2024-06-04"),
-    location: "teste 3",
-    price: 123.9,
-    simnao: "simplorio",
-  };
-
-  const eventForm = new EventForm(event);
-
-  const actionForm = FormAction.UPDATE;
-  const schemaForm = eventForm.createFormSchema(actionForm);
 
   return (
     <div>
-      <h1>Novo Participante</h1>
-      <Form<Event>
-        schema={schemaForm}
-        columns={4}
-        action={actionForm}
-        onSubmit={onSubmit}
-        onCancel={onCancel}
+      <EntityBrowser<Event>
+        title="Gerenciar Eventos"
+        fetchEntities={fetchEvents}
+        entityForm={new EventForm({} as Event)}
+        mainActions={mainActions}
       />
     </div>
   );

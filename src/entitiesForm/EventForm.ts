@@ -19,7 +19,7 @@ class EventForm implements EntityForm<Event> {
     registrationDeadline: null,
     location: "",
     price: 0.0,
-    simnao: "",
+    typeEvent: "",
   };
 
   constructor(event: Event) {
@@ -127,17 +127,15 @@ class EventForm implements EntityForm<Event> {
   };
 
   testeSchema: FormField = {
-    name: "simnao",
-    label: "Selecione",
+    name: "typeEvent",
+    label: "Tipo do evento",
     type: FieldTypes.select,
     required: true,
     options: [
-      { value: "sim", label: "Sim" },
-      { value: "simples", label: "Simples" },
-      { value: "simplorio", label: "Simplorio" },
-      { value: "nao", label: "Não" },
-      { value: "naoSei", label: "NãoSei" },
-      { value: "naoTemOQueColocar", label: "NãoTemOQueColocar" },
+      { value: "palestra", label: "Palestra" },
+      { value: "minicurso", label: "Mini Curso" },
+      { value: "congresso", label: "Congresso" },
+      { value: "workshop", label: "Workshop" },
     ],
     validator: ZOD_VALIDATOR.selectOptionOptional,
     visibleInList: false,

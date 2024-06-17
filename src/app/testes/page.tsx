@@ -1,9 +1,6 @@
 "use client";
 import React from "react";
-import { FaEllipsisV } from "react-icons/fa";
 import EntityBrowser from "@/components/EntityBrowser/EntityBrowser";
-import { Event } from "@/entities/Event";
-import EventForm from "@/entitiesForm/EventForm";
 import { Participant } from "@/entities/Participant";
 import { ParticipantForm } from "@/entitiesForm/ParticipantForm";
 import {
@@ -12,86 +9,6 @@ import {
   MainAction,
   PaginatedData,
 } from "@/components/EntityBrowser/EntityBrowser.types";
-import { mockEvents } from "./mockevents";
-
-const mainActions: MainAction[] = [
-  {
-    icon: FaEllipsisV,
-    label: "More",
-    onClick: () => console.log("Perform other action"),
-    className: "bg-gray-500 hover:bg-gray-600 text-white",
-  },
-  {
-    icon: FaEllipsisV,
-    label: "More",
-    onClick: () => console.log("Perform other action"),
-    className: "bg-gray-500 hover:bg-gray-600 text-white",
-  },
-  {
-    icon: FaEllipsisV,
-    label: "More",
-    onClick: () => console.log("Perform other action"),
-    className: "bg-gray-500 hover:bg-gray-600 text-white",
-  },
-];
-
-const createFilterCondition = (filter: Filter) => {
-  const { field, operator, value } = filter;
-
-  switch (FilterCondition[operator]) {
-    case FilterCondition.Equals:
-      return (item: any) => item[field] == value;
-
-    case FilterCondition.Contains:
-      return (item: any) => item[field]?.includes(value);
-
-    case FilterCondition.StartsWith:
-      console.log("2");
-      return (item: any) => item[field]?.startsWith(value);
-
-    case FilterCondition.EndsWith:
-      return (item: any) => item[field]?.endsWith(value);
-
-    case FilterCondition.LessThan:
-      return (item: any) => new Date(item[field]) < new Date(value);
-
-    case FilterCondition.GreaterThan:
-      return (item: any) => new Date(item[field]) > new Date(value);
-
-    case FilterCondition.LessOrEqual:
-      return (item: any) => new Date(item[field]) <= new Date(value);
-
-    case FilterCondition.GreaterOrEqual:
-      return (item: any) => new Date(item[field]) >= new Date(value);
-
-    default:
-      return () => true;
-  }
-};
-
-const fetchEvents = async (
-  page: number,
-  pageSize: number = 10,
-  filters?: Filter[]
-): Promise<PaginatedData<Event>> => {
-  let mockFiltered = mockEvents;
-
-  if (filters && filters.length > 0) {
-    console.log(filters);
-    mockFiltered = mockEvents.filter((event) =>
-      filters.every((filter) => createFilterCondition(filter)(event))
-    );
-  }
-
-  const totalPages = Math.ceil(mockFiltered.length / pageSize);
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedData = mockFiltered.slice(startIndex, endIndex);
-
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  return { paginatedData, totalPages };
-};
 
 const fetchMockParticpant = async (
   page: number,
@@ -129,13 +46,6 @@ const fetchMockParticpant = async (
 const Home = () => {
   return (
     <div>
-      <EntityBrowser<Event>
-        title="Cadastro de Testes"
-        fetchEntities={fetchEvents}
-        entityForm={new EventForm({} as Event)}
-        mainActions={mainActions}
-      />
-
       {/*
       <br />
       <EntityBrowser<Participant>

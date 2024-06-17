@@ -6,6 +6,18 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "bg-blue-500",
+    "bg-blue-600",
+    "text-blue-500",
+    "bg-green-500",
+    "bg-green-600",
+    "text-white",
+    {
+      pattern: /(bg|text|border)-gray-(100|200|300|400|500|600|700|800|900)/,
+      variants: ["", "hover", "dark", "dark:hover"],
+    },
+  ],
   theme: {
     extend: {
       colors: {
