@@ -10,8 +10,8 @@ import EntityBrowser from "@/components/EntityBrowser";
 import { Participant } from "@/entities/Participant";
 import { ParticipantForm } from "@/entitiesForm/ParticipantForm";
 
-import { mockParticipants } from "./mockparticipant";
-import { filterConditionConverter } from "@/utils/FilterConditionConverter";
+import { mockParticipants } from "../mocks/mockparticipant";
+import { filterConditionConverter } from "@/utils/filterConditionConverter";
 
 const Home = () => {
   const fetchMockParticpant = async (
@@ -22,7 +22,6 @@ const Home = () => {
     let mockFiltered = mockParticipants;
 
     if (filters && filters.length > 0) {
-      console.log(filters);
       mockFiltered = mockParticipants.filter((event) =>
         filters.every((filter) => filterConditionConverter(filter)(event))
       );

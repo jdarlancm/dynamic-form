@@ -47,12 +47,9 @@ export class ParticipantForm implements EntityForm<Participant> {
   }
 
   createFormSchema(action: FormAction): FormField[] {
-    const formSchema = this.baseSchema;
-    const readOnly = action === FormAction.DELETE || action === FormAction.VIEW;
-    return formSchema.map((field) => ({
+    return this.baseSchema.map((field) => ({
       ...field,
       value: this.object ? this.object[field.name as keyof Participant] : "",
-      readOnly: readOnly,
     }));
   }
 

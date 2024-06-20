@@ -182,4 +182,4 @@ Neste projeto há exemplos práticos de como utilizar os componentes usando como
 
 # Próximas Features
 [] Inputs autocomplete para grande volume de dados (fetch)
-[] 
+[] Exibicao do label dos select na listagem do EntityBrowser

@@ -55,7 +55,8 @@ const Form = <T,>({
     const isReadOnly =
       action === FormAction.VIEW ||
       action === FormAction.DELETE ||
-      (field?.readOnly !== undefined ? field.readOnly : false);
+      (field?.readOnly !== undefined ? field.readOnly : false) ||
+      (field?.primaryKey !== undefined ? field.primaryKey : false);
 
     return (
       <div

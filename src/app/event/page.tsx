@@ -14,8 +14,8 @@ import EntityBrowser from "@/components/EntityBrowser";
 import EventForm from "@/entitiesForm/EventForm";
 import { Event } from "@/entities/Event";
 
-import { mockEvents } from "./mockevents";
-import { filterConditionConverter } from "@/utils/FilterConditionConverter";
+import { mockEvents } from "../mocks/mockevents";
+import { filterConditionConverter } from "@/utils/filterConditionConverter";
 
 const Home = () => {
   const mainActions: MainAction[] = [
@@ -41,7 +41,6 @@ const Home = () => {
     let mockFiltered = mockEvents;
 
     if (filters && filters.length > 0) {
-      console.log(filters);
       mockFiltered = mockEvents.filter((event) =>
         filters.every((filter) => filterConditionConverter(filter)(event))
       );

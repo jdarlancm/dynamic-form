@@ -14,7 +14,6 @@ export const filterConditionConverter = (filter: Filter) => {
       return (item: any) => item[field]?.includes(value);
 
     case FilterCondition.StartsWith:
-      console.log("2");
       return (item: any) => item[field]?.startsWith(value);
 
     case FilterCondition.EndsWith:

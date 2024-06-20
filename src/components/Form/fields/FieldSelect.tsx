@@ -11,7 +11,6 @@ interface SelectFieldProps extends Props {
 
 const SelectField = React.forwardRef<Props, SelectFieldProps>(
   ({ field, formValue, options, onChange, ...props }, ref) => {
-    console.log(props);
     return (
       <Select
         {...props}
